@@ -15,11 +15,14 @@ def main():
     rocks = Rocks()
 
     new_bullet = pygame.USEREVENT + 0
-    pygame.time.set_timer(new_bullet, 200) #new bullet every 200ms
+    pygame.time.set_timer(new_bullet, 5) #new bullet every 200ms
     manage_projectiles = pygame.USEREVENT + 1
     pygame.time.set_timer(manage_projectiles, 16) #update and check position of bullet every 16ms
 
-    rocks.new_rock()
+
+    new_rock = pygame.USEREVENT +2
+    pygame.time.set_timer(new_rock, 100)
+
 
     player_surf = pygame.Surface((10, 10))
     player_surf.fill('red')
@@ -28,15 +31,20 @@ def main():
     
     angle = 0
 
+    rocks.new_rock()
+
     while run:
         for event in pygame.event.get():
             if event.type == pygame.QUIT or (event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE): #quit
                 run = False
-            elif event.type == new_bullet: #every 200ms
+            elif event.type == new_bullet and pygame.mouse.get_pressed()[0]: #every 200ms
                 bullets.new_bullet()
             elif event.type == manage_projectiles: #every 16ms
                 bullets.manage_bullets()
                 rocks.update_position()
+            elif event.type == new_rock:
+                #rocks.new_rock()
+                pass
                 
         """img_copy = pygame.transform.scale(rock_image[0], (150, 150))
         img_copy = pygame.transform.rotate(img_copy, angle)
@@ -76,7 +84,7 @@ def main():
 
 
 
-        rocks.collision_test(bullets.bullets, bullets)
+        rocks.check_collision_bullet(bullets.bullets, bullets)
         pygame.display.update()
         clock.tick(60)
         
